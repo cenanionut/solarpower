@@ -1,0 +1,99 @@
+.contactme-section {
+  font-family: "Segoe UI", sans-serif;
+  margin-left: 20%;
+  padding-bottom: 10vh;
+  background-color: rgb(36, 38, 48);
+}
+
+.contactme-section > h1 {
+  color: #fff;
+  margin-left: 10%;
+  padding-bottom: 25px;
+}
+
+.wrapper-contact {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-left: 10%;
+  min-height: 20vh;
+}
+
+.left-side-contact {
+  align-self: baseline;
+  min-height: 20vh;
+}
+
+.right-side-contact {
+  align-self: auto;
+  min-height: 20vh;
+}
+
+.left-side-contact > h2 {
+  color: #fff;
+  margin-right: 5px;
+}
+
+.left-side-contact > h3 {
+  color: #fff;
+  margin-right: 5%;
+}
+
+.left-side-contact > img {
+  width: 50%;
+  margin-left: 10%;
+}
+
+.name-adress > input {
+  width: 100%;
+  height: 44px;
+  margin: 4px;
+  border-radius: 25px;
+  padding: 20px;
+  text-align: left;
+  font-size: 20px;
+}
+
+.subject > input {
+  width: 100%;
+  height: 44px;
+  margin: 4px;
+  border-radius: 25px;
+  padding: 20px;
+  text-align: left;
+  font-size: 20px;
+}
+
+.message > input {
+  width: 100%;
+  height: 44px;
+  margin: 4px;
+  border-radius: 25px;
+  padding: 20px;
+  text-align: left;
+  font-size: 20px;
+}
+
+.name-adress {
+  display: flex;
+}
+
+#mesaj {
+  height: 100px;
+}
+
+.buton_aboutme {
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .contactme-section {
+    margin-left: 0%;
+  }
+  .wrapper-contact {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}

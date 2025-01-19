@@ -1,0 +1,148 @@
+.sign-up-section {
+  overflow: hidden;
+  height: 100vh;
+  max-width: 100%;
+  background-color: rgb(36, 38, 48);
+  padding-bottom: 0;
+  bottom: 0;
+}
+
+.sign-up {
+  display: flex;
+  height: 90vh;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-family: "Segoe UI", sans-serif;
+  background-color: rgb(36, 38, 48);
+  overflow: hidden !important;
+}
+
+.sign-up > img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  object-fit: contain;
+  overflow: hidden !important;
+}
+
+.titlu {
+  margin-bottom: 20px;
+  font-size: 40px;
+}
+
+.adresa-de-mail > h2 {
+  margin-bottom: 0;
+  font-size: 20px;
+  margin-left: 25px;
+}
+
+.adresa-de-mail > input {
+  width: 300px;
+  border-radius: 25px;
+  margin: 4px;
+  padding: 15px;
+  font-size: 15px;
+}
+
+.sign-up-pass > h2 {
+  margin-bottom: 0;
+  font-size: 20px;
+  margin-left: 25px;
+}
+
+.sign-up-pass > input {
+  width: 300px;
+  border-radius: 25px;
+  margin: 4px;
+  padding: 15px;
+  font-size: 15px;
+}
+
+:root {
+  --primary: #fff;
+}
+
+.btn-signup {
+  padding: 8px 20px;
+  border-radius: 2px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background-color: var(--primary);
+  color: #242424;
+  border: 1px solid var(--primary);
+}
+
+.btn--outline {
+  background-color: transparent;
+  color: #fff;
+  padding: 8px 20px;
+  border: 1px solid var(--primary);
+  transition: all 0.3s ease-out;
+}
+
+.btn--medium {
+  padding: 8px 20px;
+  font-size: 20px;
+}
+
+.btn--large {
+  padding: 12px 26px;
+  font-size: 20px;
+}
+
+.btn--medium:hover,
+.btn--large:hover {
+  background: #fff;
+  color: #242424;
+  transition: all 0.3s ease-out;
+}
+
+.butoane {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.alert {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.auth-info {
+  padding-top: 10px;
+  text-align: center;
+}
+
+.formSignUp {
+  z-index: 100;
+}
+
+@media screen and (max-width: 768px) {
+  .sign-up > img {
+    visibility: hidden;
+  }
+}

@@ -1,0 +1,52 @@
+.tehnic-section {
+  height: auto;
+  top: 0;
+  padding-top: 50px;
+}
+
+.tehnic-general {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.img__wrapper > img {
+  width: 200px;
+  border-radius: 100px;
+  margin-top: 10px;
+}
+
+.img__wrapper > .img-description {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+  top: 10px;
+  line-height: 200px;
+  vertical-align: middle;
+  font-size: 25px;
+  background: rgba(7, 12, 15, 0.781);
+  color: #fff;
+  visibility: hidden;
+  opacity: 0;
+  text-align: center;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.img__wrapper:hover > .img-description {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+  #img-description-mobile-1 {
+    top: 10px;
+  }
+  #img-description-mobile-2 {
+    top: 223px;
+  }
+  #img-description-mobile-3 {
+    top: 437px;
+  }
+}

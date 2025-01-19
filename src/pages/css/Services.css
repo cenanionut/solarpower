@@ -1,0 +1,332 @@
+.cards_servicii {
+  padding: 2rem;
+  padding-top: 1rem;
+  background: #fff;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.services > h1 {
+  font-size: 4rem;
+  text-align: center;
+  color: black;
+}
+
+.cards_servicii > h1 {
+  text-align: center;
+}
+
+.cards_servicii_wrapper {
+  position: relative;
+  margin: 50px 0 45px;
+  min-width: 300px;
+}
+
+.cards_items_servicii {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.card_servicii {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-evenly;
+  flex: 1;
+  margin: 0 1rem;
+  border-radius: 10px;
+  border: 1px solid gray;
+  align-self: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 2rem;
+  border-top: 10px solid gray;
+}
+
+.card_servicii:hover {
+  border-top: 10px solid limegreen;
+}
+
+.card_servicii > img {
+  width: 100px;
+  align-self: center;
+  padding: 1rem;
+}
+
+.card_servicii > h2 {
+  color: black;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.card_servicii > h1 {
+  color: limegreen;
+  font-size: 4rem;
+  margin-bottom: 0;
+}
+
+.card_servicii > h3 {
+  top: 0;
+}
+
+#descriere_servicii {
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+.descr_servicii_item {
+  text-align: center;
+}
+
+.fa-bolt {
+  color: gold;
+  margin-left: 3px;
+  display: inline;
+}
+
+.cards_servicii_wrapper > h5 {
+  text-align: center;
+}
+
+@media screen and (max-width: 968px) {
+  .cards_items_servicii {
+    margin-bottom: 0;
+  }
+}
+
+/* SERVICIU SOLO */
+
+.cards_serviciu {
+  padding: 2rem;
+  padding-top: 1rem;
+  background: #fff;
+  max-width: 1120px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.card_wrapper_serviciu {
+  position: relative;
+  margin: 50px 0 45px;
+}
+
+.cards_items_serviciu {
+  margin-bottom: 24px;
+}
+
+.card_serviciu {
+  display: flex;
+  flex: 1;
+  margin: 0 1rem;
+  border-radius: 10px;
+}
+
+.left-side {
+  width: 50%;
+}
+
+.right-side {
+  width: 50%;
+  padding-left: 6%;
+  align-self: flex-start;
+}
+
+.right-side > h2 {
+  color: black;
+}
+
+.right-side > h3 {
+  padding-bottom: 1rem;
+}
+
+.img_serviciu {
+  width: 100%;
+}
+
+.icon_serviciu {
+  position: relative;
+  z-index: 2;
+  height: 100px;
+  top: -200px;
+  left: 90%;
+  background-color: white;
+  border-radius: 50%;
+  padding: 0.5rem;
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+    0 100px 80px rgba(0, 0, 0, 0.12);
+}
+
+.serviciu-play {
+  margin-top: 2rem;
+}
+
+.right-side > p {
+  color: black;
+}
+
+/* CARD SERVICIU LEFT MOBILE ADAPTATION */
+
+@media screen and (max-width: 968px) {
+  .card_serviciu {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 0 1rem;
+    border-radius: 10px;
+    border: 1px solid gray;
+    margin-bottom: 2rem;
+  }
+
+  .services > h1 {
+    font-size: 2rem;
+  }
+
+  .cards_servicii_wrapper {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .card_wrapper_serviciu {
+    position: relative;
+    margin-top: 0;
+  }
+
+  .img_serviciu {
+    display: inline;
+  }
+
+  .left-side {
+    width: 100%;
+    height: 135px;
+  }
+
+  .right-side {
+    width: 100%;
+    padding-left: 0;
+    text-align: center;
+    padding: 1rem;
+    padding-top: 2rem;
+  }
+
+  .right-side > p {
+    text-align: left;
+  }
+
+  .icon_serviciu {
+    left: 30%;
+    top: -120px;
+    position: relative;
+    height: 100px;
+    background-color: white;
+    border-radius: 50%;
+  }
+
+  .serviciu-play {
+    margin-top: 1rem;
+  }
+}
+
+/* CARD SERVICIU CU POZA LA DREAPTA */
+
+.icon_serviciu_second {
+  position: relative;
+  z-index: 2;
+  height: 100px;
+  top: -220px;
+  left: -50px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 0.5rem;
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+    0 100px 80px rgba(0, 0, 0, 0.12);
+}
+
+.right-side-second {
+  width: 50%;
+}
+
+.left-side-second {
+  padding-top: 3rem;
+  width: 50%;
+  padding-right: 6%;
+  text-align: right;
+}
+
+.left-side-second > h2 {
+  color: black;
+}
+
+.left-side-second > h3 {
+  padding-bottom: 1rem;
+}
+
+.left-side-second > p {
+  color: black;
+}
+
+/* CARD SERVICIU POZA IN DREAPTA ADAPTARE MOBILE */
+
+@media screen and (max-width: 968px) {
+  .left-side-second {
+    width: 100%;
+    text-align: center;
+  }
+  .right-side-second {
+    width: 100%;
+    height: 135px;
+    overflow: hidden;
+  }
+
+  .img_serviciu {
+    overflow: hidden;
+  }
+
+  .card-serviciu-dreapta {
+    flex-direction: column-reverse;
+  }
+
+  .icon_serviciu_second {
+    left: 30%;
+    top: -140px;
+    position: relative;
+    height: 100px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: none;
+  }
+
+  .left-side-second > p {
+    text-align: center;
+  }
+
+  .left-side-second {
+    padding: 1rem;
+  }
+}
+
+.icon_serviciu:hover {
+  animation: spin 2s infinite;
+}
+
+.icon_serviciu_second:hover {
+  animation: spin 2s infinite;
+}
+
+@keyframes spin {
+  0% {
+    opacity: 1;
+    transform: rotate(0);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-360deg);
+  }
+}
