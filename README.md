@@ -1,6 +1,3 @@
-Certainly! I've reviewed your existing `README.md` for the Intelligent Solar Panel System and enhanced it to provide a more detailed and technically focused overview, minimizing business-related content. Below is the revised `README.md` in plain text format:
-
-```
 # Intelligent Solar Panel System
 
 This repository contains the codebase for the Intelligent Solar Panel System, developed as part of a Bachelor's Thesis. The project aims to optimize solar energy collection through intelligent tracking and monitoring mechanisms.
@@ -91,6 +88,3 @@ Contributions are welcome! Please fork this repository and submit pull requests 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-```
-
-This enhanced `README.md` provides a comprehensive technical overview of the Intelligent Solar Panel System, detailing its architecture, components, and usage instructions. If you have any further questions or need additional assistance, feel free to ask! 
