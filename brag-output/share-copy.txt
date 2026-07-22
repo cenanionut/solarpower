@@ -1,0 +1,1 @@
+Introducing CNN SUNPWR: a two-axis solar tracker that reads its own voltage, current, power, and energy output — sensor to cloud, live on a dashboard I built from scratch. Built with Arduino, an INA219 current/voltage sensor, and a React/Firebase web stack.

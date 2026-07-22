@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>CNN SUNPWR — Brag</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/music/audio-data.js"></script>
+    <style>
+      :root {
+        --charcoal: #1a1817;
+        --charcoal-2: #17161a;
+        --blue: #457b9d;
+        --blue-deep: #2c5470;
+        --orange: #ff9d2e;
+        --gold: #f2c14e;
+        --warm-white: #f6f3ee;
+        --card-glass: rgba(17, 19, 26, 0.88);
+        --card-glass-2: rgba(15, 26, 34, 0.82);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #000;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--charcoal);
+      }
+
+      .clip {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+      }
+
+      .scene-surface {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #scene-2-surface,
+      #scene-3-surface,
+      #scene-4-surface {
+        opacity: 0;
+      }
+
+      .bg-fill {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .bg-charcoal {
+        background: var(--charcoal);
+      }
+
+      .bg-blue {
+        background: var(--blue);
+      }
+
+      /* ---------- shared decorative bits ---------- */
+
+      .vignette-radial {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .vignette-dark {
+        background: radial-gradient(
+          ellipse at 50% 46%,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0) 42%,
+          rgba(0, 0, 0, 0.55) 100%
+        );
+      }
+
+      .vignette-blue {
+        background: radial-gradient(
+          ellipse at 50% 40%,
+          rgba(255, 255, 255, 0.04) 0%,
+          rgba(0, 0, 0, 0) 38%,
+          rgba(20, 35, 46, 0.55) 100%
+        );
+      }
+
+      .grid-lines {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background-image: linear-gradient(rgba(255, 157, 46, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 157, 46, 0.06) 1px, transparent 1px);
+        background-size: 96px 96px;
+        opacity: 0.5;
+      }
+
+      .scanlines {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.025) 0px,
+          rgba(255, 255, 255, 0.025) 1px,
+          rgba(0, 0, 0, 0) 1px,
+          rgba(0, 0, 0, 0) 4px
+        );
+      }
+
+      .glow-orb {
+        position: absolute;
+        width: 900px;
+        height: 900px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        pointer-events: none;
+        background: radial-gradient(circle, rgba(255, 157, 46, 0.22) 0%, rgba(255, 157, 46, 0) 68%);
+      }
+
+      .orbit-ring {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        border-radius: 50%;
+        border: 1.5px solid rgba(255, 157, 46, 0.16);
+        pointer-events: none;
+      }
+
+      /* ---------- typography ---------- */
+
+      .voice {
+        font-family: "Oswald", sans-serif;
+        font-weight: 700;
+        color: var(--warm-white);
+        letter-spacing: 0.01em;
+      }
+
+      .kicker {
+        font-family: "Oswald", sans-serif;
+        font-weight: 700;
+        font-size: 32px;
+        letter-spacing: 0.22em;
+        color: var(--warm-white);
+        text-transform: uppercase;
+        opacity: 0.82;
+      }
+
+      .data-label {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--warm-white);
+        opacity: 0.72;
+      }
+
+      .data-value {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        color: var(--gold);
+      }
+
+      /* ---------- SCENE 1: ignition ---------- */
+
+      #scene-1-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .sun-mark-wrap {
+        position: relative;
+        width: 128px;
+        height: 128px;
+        margin-bottom: 26px;
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .sun-mark-glow {
+        position: absolute;
+        inset: -40px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 157, 46, 0.5) 0%, rgba(255, 157, 46, 0) 70%);
+        pointer-events: none;
+      }
+
+      #wordmark-1 {
+        font-size: 46px;
+        letter-spacing: 0.34em;
+        opacity: 0;
+        margin-bottom: 40px;
+      }
+
+      #headline-1 {
+        font-size: 172px;
+        line-height: 0.98;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        opacity: 0;
+        margin: 0 0 26px 0;
+        text-align: center;
+      }
+
+      #subheadline-1 {
+        font-family: "Oswald", sans-serif;
+        font-weight: 400;
+        font-size: 40px;
+        color: var(--warm-white);
+        opacity: 0;
+        margin: 0 0 60px 0;
+        letter-spacing: 0.01em;
+      }
+
+      .cta-button {
+        position: relative;
+        font-family: "Oswald", sans-serif;
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: 0.14em;
+        color: var(--warm-white);
+        text-transform: uppercase;
+        border: 2.5px solid rgba(246, 243, 238, 0.8);
+        border-radius: 60px;
+        padding: 24px 56px;
+        opacity: 0;
+      }
+
+      .click-ring {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 260px;
+        height: 100px;
+        transform: translate(-50%, -50%) scale(0.6);
+        border-radius: 60px;
+        border: 2.5px solid rgba(255, 157, 46, 0.65);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .cursor-icon {
+        position: absolute;
+        width: 46px;
+        height: 46px;
+        opacity: 0;
+        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+      }
+
+      /* ---------- SCENE 2: dashboard ---------- */
+
+      #scene-2-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .dashboard-kicker-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 66px;
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      .live-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--gold);
+      }
+
+      .dashboard-glow-layer {
+        position: absolute;
+        width: 1900px;
+        height: 620px;
+        left: 50%;
+        top: 54%;
+        transform: translate(-50%, -50%) scale(1);
+        border-radius: 50%;
+        pointer-events: none;
+        background: radial-gradient(ellipse, rgba(242, 193, 78, 0.18) 0%, rgba(242, 193, 78, 0) 70%);
+        opacity: 0.2;
+      }
+
+      .card-row {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        gap: 50px;
+      }
+
+      .stat-card {
+        position: relative;
+        width: 350px;
+        height: 460px;
+        border-radius: 30px;
+        background: var(--card-glass-2);
+        border-top: 3px solid rgba(242, 193, 78, 0.55);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        opacity: 0;
+      }
+
+      .stat-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 22px;
+      }
+
+      .stat-label {
+        font-size: 26px;
+        margin-bottom: 26px;
+      }
+
+      .stat-value-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+
+      .stat-value {
+        font-size: 88px;
+      }
+
+      .stat-unit {
+        font-size: 34px;
+        color: var(--warm-white);
+        opacity: 0.68;
+      }
+
+      /* ---------- SCENE 3: hardware ---------- */
+
+      #scene-3-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #kicker-3 {
+        margin-bottom: 60px;
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      .hw-row {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        gap: 30px;
+      }
+
+      .hw-card {
+        position: relative;
+        width: 300px;
+        height: 380px;
+        border-radius: 24px;
+        background: var(--card-glass);
+        border-top: 3px solid rgba(255, 157, 46, 0.5);
+        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 26px;
+        opacity: 0;
+      }
+
+      .hw-icon {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 22px;
+      }
+
+      .hw-name {
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--warm-white);
+        text-align: center;
+        letter-spacing: 0.02em;
+        margin-bottom: 14px;
+      }
+
+      .hw-tag {
+        font-size: 20px;
+        letter-spacing: 0.2em;
+        color: var(--orange);
+        opacity: 0.85;
+      }
+
+      /* ---------- SCENE 4: outro ---------- */
+
+      #scene-4-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #outro-line {
+        font-family: "Oswald", sans-serif;
+        font-weight: 700;
+        font-size: 62px;
+        color: var(--warm-white);
+        text-align: center;
+        letter-spacing: 0.01em;
+        opacity: 0;
+        margin: 0 0 74px 0;
+        max-width: 1400px;
+      }
+
+      #outro-lockup {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      .outro-sun-wrap {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #wordmark-4 {
+        font-size: 40px;
+        letter-spacing: 0.3em;
+        margin-bottom: 18px;
+      }
+
+      #credit-line {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 26px;
+        letter-spacing: 0.08em;
+        color: var(--warm-white);
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="cnn-sunpwr-brag"
+      data-start="0"
+      data-width="1920"
+      data-height="1080"
+      data-duration="21.5"
+      data-fps="30"
+    >
+      <!-- ============================================================ -->
+      <!-- SCENE 1 — Ignition — global [0, 4.6] -->
+      <!-- ============================================================ -->
+      <section id="scene-1" class="clip" data-start="0" data-duration="4.6" data-track-index="1">
+        <div id="scene-1-surface" class="scene-surface">
+          <div class="bg-fill bg-charcoal"></div>
+          <div class="glow-orb" id="s1-glow"></div>
+          <div class="orbit-ring" id="s1-ring-1" style="width: 620px; height: 620px; margin-left: -310px; margin-top: -310px;"></div>
+          <div class="orbit-ring" id="s1-ring-2" style="width: 860px; height: 860px; margin-left: -430px; margin-top: -430px;"></div>
+          <div class="grid-lines"></div>
+          <div class="vignette-radial vignette-dark"></div>
+
+          <div id="scene-1-content">
+            <div class="sun-mark-wrap" id="s1-sun-wrap">
+              <div class="sun-mark-glow" id="s1-sun-glow"></div>
+              <svg width="128" height="128" viewBox="0 0 128 128" fill="none">
+                <circle cx="64" cy="64" r="26" fill="var(--orange)" />
+                <g stroke="var(--orange)" stroke-width="6" stroke-linecap="round">
+                  <line x1="64" y1="10" x2="64" y2="30" />
+                  <line x1="64" y1="98" x2="64" y2="118" />
+                  <line x1="10" y1="64" x2="30" y2="64" />
+                  <line x1="98" y1="64" x2="118" y2="64" />
+                  <line x1="26.6" y1="26.6" x2="40.2" y2="40.2" />
+                  <line x1="87.8" y1="87.8" x2="101.4" y2="101.4" />
+                  <line x1="101.4" y1="26.6" x2="87.8" y2="40.2" />
+                  <line x1="40.2" y1="87.8" x2="26.6" y2="101.4" />
+                </g>
+              </svg>
+            </div>
+
+            <div id="wordmark-1" class="voice">CNN SUNPWR</div>
+            <h1 id="headline-1" class="voice">SAVING ENERGY</h1>
+            <p id="subheadline-1">What are you waiting for?</p>
+
+            <div style="position: relative;">
+              <button id="cta-1" class="cta-button">View Device</button>
+              <div class="click-ring" id="click-ring-1"></div>
+            </div>
+          </div>
+
+          <svg id="cursor-1" class="cursor-icon" viewBox="0 0 32 32" fill="none">
+            <path
+              d="M6 3 L26 15 L16.5 17 L21 27 L17 29 L12.5 19 L6 25 Z"
+              fill="#f6f3ee"
+              stroke="#1a1817"
+              stroke-width="1.5"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 2 — Dashboard, live — global [4.0, 12.6] -->
+      <!-- ============================================================ -->
+      <section id="scene-2" class="clip" data-start="4.0" data-duration="8.6" data-track-index="2">
+        <div id="scene-2-surface" class="scene-surface">
+          <div class="bg-fill bg-blue"></div>
+          <div class="dashboard-glow-layer" id="s2-glow"></div>
+          <div class="scanlines"></div>
+          <div class="vignette-radial vignette-blue"></div>
+
+          <div id="scene-2-content">
+            <div class="dashboard-kicker-row" id="s2-kicker">
+              <div class="live-dot" id="s2-live-dot"></div>
+              <div class="kicker">Device — Live</div>
+            </div>
+
+            <div class="card-row">
+              <div class="stat-card" id="card-voltage">
+                <svg class="stat-icon" viewBox="0 0 48 48" fill="none">
+                  <path d="M26 4 L10 27 H22 L20 44 L38 19 H26 Z" fill="var(--gold)" />
+                </svg>
+                <div class="stat-label data-label">Voltage</div>
+                <div class="stat-value-row">
+                  <span class="stat-value data-value" id="val-voltage">0</span>
+                  <span class="stat-unit">V</span>
+                </div>
+              </div>
+
+              <div class="stat-card" id="card-current">
+                <svg class="stat-icon" viewBox="0 0 48 48" fill="none">
+                  <path
+                    d="M2 24 Q10 8 18 24 T34 24 T46 24"
+                    stroke="var(--gold)"
+                    stroke-width="4"
+                    fill="none"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="stat-label data-label">Current</div>
+                <div class="stat-value-row">
+                  <span class="stat-value data-value" id="val-current">0</span>
+                  <span class="stat-unit">A</span>
+                </div>
+              </div>
+
+              <div class="stat-card" id="card-power">
+                <svg class="stat-icon" viewBox="0 0 48 48" fill="none">
+                  <circle cx="24" cy="24" r="6" fill="var(--gold)" />
+                  <g stroke="var(--gold)" stroke-width="3.5" stroke-linecap="round" fill="none">
+                    <path d="M24 8 A16 16 0 0 1 40 24" />
+                    <path d="M24 40 A16 16 0 0 1 8 24" />
+                  </g>
+                </svg>
+                <div class="stat-label data-label">Power</div>
+                <div class="stat-value-row">
+                  <span class="stat-value data-value" id="val-power">0</span>
+                  <span class="stat-unit">W</span>
+                </div>
+              </div>
+
+              <div class="stat-card" id="card-energy">
+                <svg class="stat-icon" viewBox="0 0 48 48" fill="none">
+                  <rect x="10" y="12" width="24" height="30" rx="4" stroke="var(--gold)" stroke-width="3.5" fill="none" />
+                  <rect x="18" y="6" width="8" height="8" rx="1.5" fill="var(--gold)" />
+                  <path d="M26 18 L18 27 H23 L20 36 L30 24 H25 Z" fill="var(--gold)" />
+                </svg>
+                <div class="stat-label data-label">Energy / 5h</div>
+                <div class="stat-value-row">
+                  <span class="stat-value data-value" id="val-energy">0</span>
+                  <span class="stat-unit">Wh</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 3 — Engineered from the ground up — global [12.0, 17.6] -->
+      <!-- ============================================================ -->
+      <section id="scene-3" class="clip" data-start="12.0" data-duration="5.6" data-track-index="1">
+        <div id="scene-3-surface" class="scene-surface">
+          <div class="bg-fill bg-charcoal"></div>
+          <div class="glow-orb" id="s3-glow" style="opacity: 0.5;"></div>
+          <div class="grid-lines"></div>
+          <div class="vignette-radial vignette-dark"></div>
+
+          <div id="scene-3-content">
+            <div id="kicker-3" class="kicker">Engineered From The Ground Up</div>
+
+            <div class="hw-row">
+              <div class="hw-card" id="hw-arduino">
+                <svg class="hw-icon" viewBox="0 0 48 48" fill="none">
+                  <rect x="6" y="12" width="36" height="24" rx="4" stroke="var(--orange)" stroke-width="3" fill="none" />
+                  <circle cx="16" cy="24" r="2.6" fill="var(--orange)" />
+                  <circle cx="24" cy="24" r="2.6" fill="var(--orange)" />
+                  <circle cx="32" cy="24" r="2.6" fill="var(--orange)" />
+                </svg>
+                <div class="hw-name">Arduino</div>
+                <div class="hw-tag">MCU</div>
+              </div>
+
+              <div class="hw-card" id="hw-ina">
+                <svg class="hw-icon" viewBox="0 0 48 48" fill="none">
+                  <circle cx="24" cy="24" r="18" stroke="var(--orange)" stroke-width="3" fill="none" />
+                  <line x1="24" y1="24" x2="34" y2="14" stroke="var(--orange)" stroke-width="3" stroke-linecap="round" />
+                  <circle cx="24" cy="24" r="2.6" fill="var(--orange)" />
+                </svg>
+                <div class="hw-name">INA219</div>
+                <div class="hw-tag">SENSOR</div>
+              </div>
+
+              <div class="hw-card" id="hw-servo">
+                <svg class="hw-icon" viewBox="0 0 48 48" fill="none">
+                  <circle cx="24" cy="24" r="6" fill="var(--orange)" />
+                  <g stroke="var(--orange)" stroke-width="3" stroke-linecap="round" fill="none">
+                    <path d="M24 6 A18 18 0 0 1 41 20" />
+                    <path d="M41 20 L36 15 M41 20 L45 15" />
+                    <path d="M24 42 A18 18 0 0 1 7 28" />
+                    <path d="M7 28 L12 33 M7 28 L3 33" />
+                  </g>
+                </svg>
+                <div class="hw-name">Servo Pan-Tilt</div>
+                <div class="hw-tag">ACTUATOR</div>
+              </div>
+
+              <div class="hw-card" id="hw-photo">
+                <svg class="hw-icon" viewBox="0 0 48 48" fill="none">
+                  <circle cx="24" cy="24" r="12" stroke="var(--orange)" stroke-width="3" fill="none" />
+                  <g stroke="var(--orange)" stroke-width="3" stroke-linecap="round">
+                    <line x1="24" y1="2" x2="24" y2="9" />
+                    <line x1="24" y1="39" x2="24" y2="46" />
+                    <line x1="8.6" y1="8.6" x2="13.6" y2="13.6" />
+                    <line x1="34.4" y1="34.4" x2="39.4" y2="39.4" />
+                    <line x1="39.4" y1="8.6" x2="34.4" y2="13.6" />
+                    <line x1="13.6" y1="34.4" x2="8.6" y2="39.4" />
+                  </g>
+                </svg>
+                <div class="hw-name">Photoresistor</div>
+                <div class="hw-tag">INPUT</div>
+              </div>
+
+              <div class="hw-card" id="hw-solar">
+                <svg class="hw-icon" viewBox="0 0 48 48" fill="none">
+                  <rect x="4" y="10" width="40" height="28" rx="2" stroke="var(--orange)" stroke-width="3" fill="none" />
+                  <line x1="17.3" y1="10" x2="17.3" y2="38" stroke="var(--orange)" stroke-width="2" />
+                  <line x1="30.6" y1="10" x2="30.6" y2="38" stroke="var(--orange)" stroke-width="2" />
+                  <line x1="4" y1="24" x2="44" y2="24" stroke="var(--orange)" stroke-width="2" />
+                </svg>
+                <div class="hw-name">Solar Panel</div>
+                <div class="hw-tag">SOURCE</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 4 — Outro — global [17.0, 21.5] -->
+      <!-- ============================================================ -->
+      <section id="scene-4" class="clip" data-start="17.0" data-duration="4.5" data-track-index="2">
+        <div id="scene-4-surface" class="scene-surface">
+          <div class="bg-fill bg-charcoal"></div>
+          <div class="glow-orb" id="s4-glow"></div>
+          <div class="orbit-ring" id="s4-ring" style="width: 760px; height: 760px; margin-left: -380px; margin-top: -380px;"></div>
+          <div class="grid-lines"></div>
+          <div class="vignette-radial vignette-dark"></div>
+
+          <div id="scene-4-content">
+            <p id="outro-line">Sensor to cloud, in real time.</p>
+
+            <div id="outro-lockup">
+              <div class="outro-sun-wrap" id="s4-sun-wrap">
+                <svg width="96" height="96" viewBox="0 0 128 128" fill="none">
+                  <circle cx="64" cy="64" r="26" fill="var(--orange)" />
+                  <g stroke="var(--orange)" stroke-width="6" stroke-linecap="round">
+                    <line x1="64" y1="10" x2="64" y2="30" />
+                    <line x1="64" y1="98" x2="64" y2="118" />
+                    <line x1="10" y1="64" x2="30" y2="64" />
+                    <line x1="98" y1="64" x2="118" y2="64" />
+                    <line x1="26.6" y1="26.6" x2="40.2" y2="40.2" />
+                    <line x1="87.8" y1="87.8" x2="101.4" y2="101.4" />
+                    <line x1="101.4" y1="26.6" x2="87.8" y2="40.2" />
+                    <line x1="40.2" y1="87.8" x2="26.6" y2="101.4" />
+                  </g>
+                </svg>
+              </div>
+              <div id="wordmark-4" class="voice">CNN SUNPWR</div>
+              <div id="credit-line">Full-stack IoT · Bachelor's Thesis, UTCN</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- AUDIO -->
+      <!-- ============================================================ -->
+      <audio
+        id="bgm"
+        src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"
+        data-start="0"
+        data-duration="21.5"
+        data-track-index="10"
+        data-volume="0.3"
+      ></audio>
+
+      <audio
+        id="sfx-click"
+        src="assets/sfx/interface/click_003.ogg"
+        data-start="3.27"
+        data-duration="0.01"
+        data-track-index="11"
+        data-volume="0.55"
+      ></audio>
+
+      <audio
+        id="sfx-card-voltage"
+        src="assets/sfx/impact/impactSoft_medium_000.ogg"
+        data-start="4.91"
+        data-duration="0.12"
+        data-track-index="12"
+        data-volume="0.45"
+      ></audio>
+
+      <audio
+        id="sfx-card-energy"
+        src="assets/sfx/impact/impactSoft_medium_000.ogg"
+        data-start="8.74"
+        data-duration="0.12"
+        data-track-index="13"
+        data-volume="0.5"
+      ></audio>
+
+      <audio
+        id="sfx-hw-1"
+        src="assets/sfx/impact/impactSoft_medium_004.ogg"
+        data-start="12.8"
+        data-duration="0.15"
+        data-track-index="14"
+        data-volume="0.4"
+      ></audio>
+
+      <audio
+        id="sfx-hw-2"
+        src="assets/sfx/impact/impactSoft_medium_004.ogg"
+        data-start="14.5"
+        data-duration="0.15"
+        data-track-index="15"
+        data-volume="0.4"
+      ></audio>
+
+      <audio
+        id="sfx-hw-3"
+        src="assets/sfx/impact/impactSoft_medium_004.ogg"
+        data-start="16.2"
+        data-duration="0.15"
+        data-track-index="16"
+        data-volume="0.4"
+      ></audio>
+
+      <audio
+        id="sfx-outro-bong"
+        src="assets/sfx/interface/bong_001.ogg"
+        data-start="18.56"
+        data-duration="0.12"
+        data-track-index="17"
+        data-volume="0.5"
+      ></audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      // ---------------------------------------------------------------
+      // Helpers
+      // ---------------------------------------------------------------
+      function countUp(id, from, to, duration, startTime) {
+        var proxy = { v: from };
+        tl.to(
+          proxy,
+          {
+            v: to,
+            duration: duration,
+            ease: "power2.out",
+            onUpdate: function () {
+              document.getElementById(id).textContent = Math.round(proxy.v);
+            },
+          },
+          startTime,
+        );
+      }
+
+      // ---------------------------------------------------------------
+      // Ambient decoratives — finite breathing loops (no repeat: -1)
+      // ---------------------------------------------------------------
+      tl.fromTo("#s1-glow", { scale: 0.9, opacity: 0.55 }, { scale: 1.08, opacity: 0.85, duration: 2.1, ease: "sine.inOut", yoyo: true, repeat: 2 }, 0);
+      tl.fromTo("#s1-ring-1", { rotation: 0, opacity: 0.5 }, { rotation: 30, opacity: 1, duration: 4.6, ease: "sine.inOut" }, 0);
+      tl.fromTo("#s1-ring-2", { rotation: 0, opacity: 0.4 }, { rotation: -22, opacity: 1, duration: 4.6, ease: "sine.inOut" }, 0);
+
+      tl.fromTo("#s2-glow", { scale: 0.96, opacity: 0.16 }, { scale: 1.05, opacity: 0.3, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: 3 }, 4.0);
+
+      tl.fromTo("#s3-glow", { scale: 0.94, opacity: 0.4 }, { scale: 1.06, opacity: 0.6, duration: 2.3, ease: "sine.inOut", yoyo: true, repeat: 1 }, 12.0);
+
+      tl.fromTo("#s4-glow", { scale: 0.92, opacity: 0.5 }, { scale: 1.08, opacity: 0.8, duration: 2.2, ease: "sine.inOut", yoyo: true, repeat: 1 }, 17.0);
+      tl.fromTo("#s4-ring", { rotation: 0, opacity: 0.5 }, { rotation: 18, opacity: 1, duration: 4.5, ease: "sine.inOut" }, 17.0);
+
+      // ---------------------------------------------------------------
+      // SCENE 1 — Ignition
+      // ---------------------------------------------------------------
+      tl.fromTo("#s1-sun-wrap", { scale: 0.3, rotation: -160, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.65, ease: "back.out(1.5)" }, 0.15);
+      tl.fromTo("#wordmark-1", { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 0.55);
+      tl.fromTo("#headline-1", { scale: 1.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: "power3.out" }, 0.95);
+      tl.fromTo("#subheadline-1", { y: -28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 1.6);
+      tl.fromTo("#cta-1", { scale: 0.92, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, 2.2);
+
+      tl.fromTo(
+        "#cursor-1",
+        { x: 560, y: 260, opacity: 0 },
+        { x: 118, y: 34, opacity: 1, duration: 0.5, ease: "power2.out" },
+        2.65,
+      );
+      tl.to("#cursor-1", { x: 96, y: 22, duration: 0.12, ease: "power1.in" }, 3.15);
+
+      // click — beat-nudged to 3.27s (near beat-grid 3.27s)
+      tl.to("#cta-1", { scale: 0.94, duration: 0.11, ease: "power1.in" }, 3.27);
+      tl.to("#cta-1", { scale: 1, duration: 0.16, ease: "power2.out" }, 3.38);
+      tl.fromTo(
+        "#click-ring-1",
+        { scale: 0.6, opacity: 0.55 },
+        { scale: 2.2, opacity: 0, duration: 0.55, ease: "power2.out" },
+        3.27,
+      );
+
+      // ---------------------------------------------------------------
+      // Scene 1 -> 2 crossfade @ T=4.0 (0.6s)
+      // ---------------------------------------------------------------
+      tl.to("#scene-1-surface", { opacity: 0, duration: 0.6, ease: "sine.inOut" }, 4.0);
+      tl.fromTo("#scene-2-surface", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "sine.inOut" }, 4.0);
+
+      // ---------------------------------------------------------------
+      // SCENE 2 — Dashboard, live
+      // ---------------------------------------------------------------
+      tl.fromTo("#s2-kicker", { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 4.7);
+      tl.fromTo("#s2-live-dot", { opacity: 0.4 }, { opacity: 1, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: 5 }, 4.7);
+
+      // sequential stat cards, snapped to beat-grid points 4.91 / 6.00 / 7.09 / 8.74 (8.74 = strong cue)
+      tl.fromTo("#card-voltage", { y: 26, scale: 0.94, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.15)" }, 4.91); // beat-grid: 4.91s
+      countUp("val-voltage", 0, 22, 0.5, 4.91);
+
+      tl.fromTo("#card-current", { y: 26, scale: 0.94, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.15)" }, 6.0); // beat-grid: 6.00s
+      countUp("val-current", 0, 8, 0.5, 6.0);
+
+      tl.fromTo("#card-power", { y: 26, scale: 0.94, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.15)" }, 7.09); // beat-grid: 7.09s
+      countUp("val-power", 0, 176, 0.5, 7.09);
+
+      tl.fromTo("#card-energy", { y: 26, scale: 0.94, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.15)" }, 8.74); // beat-locked: strong cue 8.74s (0.99)
+      countUp("val-energy", 0, 880, 0.5, 8.74);
+      // Energy keeps a faint slow climb after settling — implies continuous logging
+      countUp("val-energy", 880, 907, 2.7, 9.5);
+
+      // ---------------------------------------------------------------
+      // Scene 2 -> 3 crossfade @ T=12.0 (0.6s)
+      // ---------------------------------------------------------------
+      tl.to("#scene-2-surface", { opacity: 0, duration: 0.6, ease: "sine.inOut" }, 12.0);
+      tl.fromTo("#scene-3-surface", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "sine.inOut" }, 12.0);
+
+      // ---------------------------------------------------------------
+      // SCENE 3 — Engineered from the ground up
+      // ---------------------------------------------------------------
+      tl.fromTo("#kicker-3", { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power2.out" }, 12.7);
+
+      tl.fromTo("#hw-arduino", { y: 22, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.45, ease: "power2.out" }, 12.8);
+      tl.fromTo("#hw-ina", { y: 22, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.45, ease: "power2.out" }, 13.65);
+      tl.fromTo("#hw-servo", { y: 22, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.45, ease: "power2.out" }, 14.5);
+      tl.fromTo("#hw-photo", { y: 22, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.45, ease: "power2.out" }, 15.35);
+      tl.fromTo("#hw-solar", { y: 22, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.45, ease: "power2.out" }, 16.2);
+
+      // ---------------------------------------------------------------
+      // Scene 3 -> 4 crossfade @ T=17.0 (0.6s)
+      // ---------------------------------------------------------------
+      tl.to("#scene-3-surface", { opacity: 0, duration: 0.6, ease: "sine.inOut" }, 17.0);
+      tl.fromTo("#scene-4-surface", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "sine.inOut" }, 17.0);
+
+      // ---------------------------------------------------------------
+      // SCENE 4 — Outro
+      // ---------------------------------------------------------------
+      tl.fromTo("#outro-line", { scale: 0.97, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.55, ease: "power2.out" }, 17.8);
+
+      // wordmark + credit — beat-locked to strong cue 18.56s (0.99)
+      tl.fromTo("#outro-lockup", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 18.56); // beat-locked: 18.56s
+
+      tl.fromTo("#s4-sun-wrap", { rotation: 0 }, { rotation: 90, duration: 1.8, ease: "sine.inOut" }, 19.2);
+
+      // ---------------------------------------------------------------
+      // Music volume envelope
+      // ---------------------------------------------------------------
+      tl.to("#bgm", { volume: 0.34, duration: 1.2, ease: "sine.inOut" }, 4.0);
+      tl.to("#bgm", { volume: 0.3, duration: 1.0, ease: "sine.inOut" }, 12.0);
+      tl.to("#bgm", { volume: 0.15, duration: 1.4, ease: "sine.inOut" }, 17.6);
+      tl.to("#bgm", { volume: 0.0, duration: 0.9, ease: "sine.in" }, 20.6);
+
+      window.__timelines["cnn-sunpwr-brag"] = tl;
+
+      // ---------------------------------------------------------------
+      // Subtle audio-reactive glow — sun mark + dashboard card glow
+      // ---------------------------------------------------------------
+      (function () {
+        var AD = window.AUDIO_DATA;
+        if (!AD || !AD.frames || !AD.frames.length) return;
+
+        function bandAvg(bands, lo, hi) {
+          var s = 0,
+            n = 0;
+          for (var i = lo; i <= hi && i < bands.length; i++) {
+            s += bands[i];
+            n++;
+          }
+          return n ? s / n : 0;
+        }
+
+        var totalFrames = Math.min(AD.totalFrames, Math.round(21.5 * AD.fps));
+
+        for (var f = 0; f < totalFrames; f++) {
+          (function (frame, t) {
+            tl.call(
+              function () {
+                var bands = frame.bands || [];
+                var bass = bandAvg(bands, 0, 1);
+                var treble = bandAvg(bands, 11, 14);
+
+                if (t <= 4.6 || t >= 17.0) {
+                  var glow = document.getElementById(t <= 4.6 ? "s1-sun-glow" : "s4-sun-wrap");
+                  if (glow) {
+                    var blur = 22 + bass * 26;
+                    var op = 0.35 + bass * 0.3;
+                    glow.style.filter = "drop-shadow(0 0 " + blur.toFixed(1) + "px rgba(255,157,46," + op.toFixed(2) + "))";
+                  }
+                } else if (t >= 4.0 && t <= 12.6) {
+                  var cardGlow = document.getElementById("s2-glow");
+                  if (cardGlow) {
+                    var scale = 1 + treble * 0.05;
+                    var glowOp = 0.16 + treble * 0.18;
+                    cardGlow.style.transform = "translate(-50%, -50%) scale(" + scale.toFixed(3) + ")";
+                    cardGlow.style.opacity = glowOp.toFixed(2);
+                  }
+                }
+              },
+              [],
+              t,
+            );
+          })(AD.frames[f], f / AD.fps);
+        }
+      })();
+    </script>
+  </body>
+</html>
